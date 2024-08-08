@@ -11,34 +11,41 @@ namespace Library_API.Controllers
     {
 
         private readonly DataContext _context;
+        private readonly IBookRepository _bookRepository;
         
 
-        public BooksController(DataContext context)
+        public BooksController(DataContext context, IBookRepository bookRepository)
         {
             _context = context;
+            _bookRepository = bookRepository;
             
         }
 
         [HttpPost]
         public async Task<ActionResult<List<Book>>> AddBook(Booknew book)
         {
-            _context.Books.Add(new Book {Title = book.Title , Author = book.Author, Isbn = book.Isbn,  publishedDate = book.publishedDate });
-            await _context.SaveChangesAsync();
+            var BookList = new List<Book>();
 
-            return Ok(await _context.Books.ToListAsync());
+            BookList = await _bookRepository.AddBook(book);
+
+            return Ok(BookList);
 
         }
 
         [HttpGet]
         public async Task<ActionResult<List<Book>>> GetBooks()
         {
-            return Ok(await _context.Books.ToListAsync());
+           var BookList = new List<Book>();
+
+           BookList = await _bookRepository.GetAll();
+
+           return Ok(BookList);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Book>> GetBookById(int id)
         {
-            var book = await _context.Books.FindAsync(id);
+            var book = await _bookRepository.GetById(id);
 
             if (book == null)
             {
@@ -49,33 +56,13 @@ namespace Library_API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<Book>> PutProduct(int id, Booknew product)
+        public async Task<ActionResult<Book>> PutBook(int id, Booknew bookupdated)
         {
-            var book = await _context.Books.FindAsync(id);
+            var book = await _bookRepository.UpdateBook(id, bookupdated);
 
             if (book == null)
             {
                 return NotFound();
-            }
-
-            var item = Validate(book, product);
-
-            _context.Entry(book).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ProductExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
             }
 
             return book;
@@ -84,31 +71,17 @@ namespace Library_API.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<List<Book>>> DeleteBook(int id)
         {
-            var book = await _context.Books.FindAsync(id);
+            var book =  new List<Book>();
+
+            book = await _bookRepository.DeleteBook(id);
+
             if (book == null)
             {
                 return NotFound();
             }
 
-            _context.Books.Remove(book);
-            await _context.SaveChangesAsync();
-
-            return Ok(await _context.Books.ToListAsync());
+            return Ok(book);
         }
 
-        private bool ProductExists(int id)
-        {
-            return _context.Books.Any(e => e.Id == id);
-        }
-
-        private Book Validate(Book book, Booknew product)
-        {
-            
-            if (product.Title.Length != 0) { book.Title = product.Title; }
-            if (product.Author.Length != 0) { book.Author = product.Author; }
-            if (product.Isbn.Length != 0) { book.Isbn = product.Isbn; }
-            if (product.publishedDate != null) { book.publishedDate = product.publishedDate; }
-            return book;
-        }
     }
 }
