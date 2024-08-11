@@ -59,7 +59,7 @@ namespace Library_API
 
             var item = ValidateBook(book, bookupdated);
 
-            _context.Entry(book).State = EntityState.Modified;
+            _context.Entry(item).State = EntityState.Modified;
 
             try
             {
@@ -106,7 +106,7 @@ namespace Library_API
             if (bookupdated.Title.Length != 0) { book.Title = bookupdated.Title; }
             if (bookupdated.Author.Length != 0) { book.Author = bookupdated.Author; }
             if (bookupdated.Isbn.Length != 0) { book.Isbn = bookupdated.Isbn; }
-            if (bookupdated.publishedDate != null) { book.publishedDate = bookupdated.publishedDate; }
+            if (bookupdated.publishedDate != null && bookupdated.publishedDate!= DateOnly.MinValue) { book.publishedDate = bookupdated.publishedDate; }
             return book;
         }
 
