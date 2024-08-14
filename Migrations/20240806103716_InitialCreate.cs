@@ -18,7 +18,7 @@ namespace Library_API.Migrations
                     Title = table.Column<string>(type: "TEXT", nullable: false),
                     Author = table.Column<string>(type: "TEXT", nullable: false),
                     Isbn = table.Column<string>(type: "TEXT", nullable: false),
-                    publishedDate = table.Column<DateOnly>(type: "TEXT", nullable: false)
+                    PublishedDate = table.Column<DateOnly>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {

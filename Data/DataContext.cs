@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Library_API.Models;
+using Microsoft.EntityFrameworkCore;
 namespace Library_API.Data
 {
     public class DataContext : DbContext
@@ -8,6 +9,6 @@ namespace Library_API.Data
 
         }
 
-        public DbSet<Book> Books => Set<Book>();
+        public DbSet<BookWithId> Books => Set<BookWithId>();
     }
 }

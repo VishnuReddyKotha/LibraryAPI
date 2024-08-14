@@ -35,7 +35,7 @@ namespace Library_API.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateOnly>("publishedDate")
+                    b.Property<DateOnly>("PublishedDate")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
