@@ -34,11 +34,11 @@ namespace Library_API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<List<BookWithId>>> GetBooks()
         {
-            var BookList = new List<BookWithId>();
+            var booksList = new List<BookWithId>();
 
-            BookList = await _bookRepository.GetAllBooks();
+            booksList = await _bookRepository.GetAllBooks();
 
-            return Ok(BookList);
+            return Ok(booksList);
         }
 
 
@@ -50,11 +50,11 @@ namespace Library_API.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<ActionResult<BookWithId>> AddBook([BindRequired] Book book)
         {
-            var Book = new BookWithId();
+            var newbook = new BookWithId();
 
-            Book = await _bookRepository.AddBook(book);
+            newbook = await _bookRepository.AddBook(book);
 
-            return CreatedAtAction(nameof(GetBookById), new { id = Book.id }, Book);
+            return CreatedAtAction(nameof(GetBookById), new { id = newbook.id }, newbook);
 
         }
 
@@ -72,7 +72,7 @@ namespace Library_API.Controllers
 
             if (book == null)
             {
-                var result = JsonSerializer.Serialize(new { message = "The Book id provided is not found/valid." });
+                var result = JsonSerializer.Serialize(new { message = "Cannot find book, Id provided is not found/valid." });
                 return NotFound(result);
             }
 
@@ -89,15 +89,15 @@ namespace Library_API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<BookWithId>> PutBook(int id, [BindRequired] Book bookModified)
         {
-            var book = await _bookRepository.UpdateBook(id, bookModified);
+            var updatedBook = await _bookRepository.UpdateBook(id, bookModified);
 
-            if (book == null)
+            if (updatedBook == null)
             {
-                var result = JsonSerializer.Serialize(new { message = "The Book id provided is not found/valid." });
+                var result = JsonSerializer.Serialize(new { message = "Cannot update book, Id provided is not found/valid." });
                 return NotFound(result);
             }
 
-            return Ok(book);
+            return Ok(updatedBook);
         }
 
 
@@ -110,17 +110,17 @@ namespace Library_API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<List<BookWithId>>> DeleteBook(int id)
         {
-            var books =  new List<BookWithId>();
+            var booksList =  new List<BookWithId>();
 
-            books = await _bookRepository.DeleteBook(id);
+            booksList = await _bookRepository.DeleteBook(id);
 
-            if (books == null)
+            if (booksList == null)
             {
-                var result = JsonSerializer.Serialize(new { message = "The Book id provided is not found/valid." });
+                var result = JsonSerializer.Serialize(new { message = "Cannot delete book, Id provided is not found/valid." });
                 return NotFound(result);
             }
 
-            return Ok(books);
+            return Ok(booksList);
         }
 
     }

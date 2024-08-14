@@ -34,7 +34,7 @@ namespace Library_API.Services
         }
 
 
-        public async Task<BookWithId> UpdateBook(int id, Book bookUpdated)
+        public async Task<BookWithId> UpdateBook(int id, Book bookModified)
         {
             var book = await _context.Books.FindAsync(id);
 
@@ -43,9 +43,9 @@ namespace Library_API.Services
                 return book;
             }
 
-            var item = _validateBook.Validate(book, bookUpdated);
+            var updatedBook = _validateBook.Validate(book, bookModified);
 
-            _context.Entry(item).State = EntityState.Modified;
+            _context.Entry(updatedBook).State = EntityState.Modified;
 
             try
             {
@@ -63,7 +63,7 @@ namespace Library_API.Services
                 }
             }
 
-            return book;
+            return updatedBook;
         }
 
         public async Task<List<BookWithId>> DeleteBook(int id)
